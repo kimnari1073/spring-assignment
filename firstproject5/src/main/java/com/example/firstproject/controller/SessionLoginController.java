@@ -22,14 +22,15 @@ public class SessionLoginController {
     private UserService userService;
 
 
-    @GetMapping(value = {"","/"})
-    public String home(Model model,
-                       @SessionAttribute(name="userId", required = false)
-                       Long userId){
-        User loginUser = userService.getLoginUserById(userId);
-        model.addAttribute("nickname",loginUser.getNickname());
-        return "greetings";
-    }
+//    @GetMapping(value = {"","/"})
+//    public String home(Model model,
+//                       @SessionAttribute(name="userId", required = false)
+//                       Long userId){
+//        User loginUser = userService.getLoginUserById(userId);
+//
+////        model.addAttribute("nickname",loginUser.getNickname());
+//        return "greetings";
+//    }
 
     @GetMapping("/join")
     public String joinPage(Model model){
@@ -62,8 +63,10 @@ public class SessionLoginController {
             httpServletRequest.getSession().invalidate();
             HttpSession session = httpServletRequest.getSession(true);
             session.setAttribute("userId",user.getId());
+            session.setAttribute("nickname",user.getLoginId());
+
             session.setMaxInactiveInterval(1800); //30분
-            return "redirect:/session-login";
+            return "redirect:/";
 
         }catch (NullPointerException e){
             rttr.addFlashAttribute("msg", "없는 회원입니다!");
@@ -101,7 +104,7 @@ public class SessionLoginController {
         }
         if(!loginUser.getRole().equals(UserRole.ADMIN)){
             System.out.println("사용자");
-            return "redirect:/session-login";
+            return "redirect:/";
         }
         return "sessionLogin/admin";
     }
