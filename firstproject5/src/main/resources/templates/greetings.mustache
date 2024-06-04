@@ -1,0 +1,14 @@
+{{>layouts/header}}
+
+{{^nickname}}
+<div class="bg-dark text-white p-5">
+    <h1>안녕하세요, 반갑습니다!</h1><br>
+    로그인을 해 주세요!
+</div>
+{{/nickname}}
+{{#nickname}}
+    <div class="bg-dark text-white p-5">
+        <h3>{{nickname}}님 환영합니다!</h3>
+    </div>
+{{/nickname}}
+{{>layouts/footer}}

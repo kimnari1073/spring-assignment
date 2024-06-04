@@ -1,0 +1,47 @@
+<div id="comments-list" class="container">
+    {{#commentDtos}}
+        <div id="comments-{{id}}" class="row">
+            <div class="mb-3 col-3">
+                <label class="form-label" for="comment-nickname">댓글 닉네임</label>
+                <input id="comment-nickname" class="form-control" value="{{nickname}}" readonly>
+            </div>
+            <div class="mb-3 col-6">
+                <label class="form-label" for="comment-content">댓글 내용</label>
+                <input id="comment-content" class="form-control" value="{{body}}" readonly>
+            </div>
+            <div class="mb-3 col" id="div_{{id}}">
+                <button id="button_{{id}}" class="btn btn-info">댓글 수정</button>
+                <a href="/comment/{{id}}/delete"  id="btn-delete" class="btn btn-danger"> 댓글 삭제 </a>
+            </div>
+        </div>
+
+        <div class="row" hidden id="hidden_div_{{id}}">
+            <div class="mb-3 col-3">
+                <label class="form-label" for="comment-nickname">수정할 닉네임</label>
+                <input id="comment-nickname" class="form-control" value="{{nickname}}">
+            </div>
+            <div class="mb-3 col-6">
+                <label class="form-label" for="comment-content">수정할 내용</label>
+                <input id="comment-content" class="form-control" value="{{body}}">
+            </div>
+            <div class="mb-3 col">
+                <br>
+                <a href="/articles/{{id}}/edit" class="btn btn-primary" id="button_hidden_id"> 수정 완료 </a><br>
+            </div>
+        </div>
+        <br><br>
+    {{/commentDtos}}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('comments-list').addEventListener('click', function(event) {
+            if (event.target.tagName === 'BUTTON') {
+                var buttonId = event.target.id;
+                var number = buttonId.match(/\d+/)[0];
+                document.getElementById('hidden_div_'+number).removeAttribute('hidden');
+                document.getElementById('button_'+number).hidden = true;
+            }
+        });
+    });
+</script>
