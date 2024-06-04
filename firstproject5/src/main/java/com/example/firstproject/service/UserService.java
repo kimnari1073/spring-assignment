@@ -23,7 +23,8 @@ public class UserService {
     }
 
     public User getLoginUserById(Long userId) {
-        if(userId == null) return null;
+        if(userId == null)
+            return null;
 
         Optional<User> optionalUser = userRepository.findById(userId);
         return optionalUser.orElse(null);

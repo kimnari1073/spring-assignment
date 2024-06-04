@@ -25,17 +25,10 @@ public class SessionLoginController {
     @GetMapping(value = {"","/"})
     public String home(Model model,
                        @SessionAttribute(name="userId", required = false)
-                       Long userId,
-                       RedirectAttributes rttr){
-        try{
-            User loginUser = userService.getLoginUserById(userId);
-            model.addAttribute("nickname",loginUser.getNickname());
-        }catch (NullPointerException e){
-            rttr.addFlashAttribute("msg", "없는 회원입니다!");
-            return "redirect:/session-login/login";
-        }
+                       Long userId){
+        User loginUser = userService.getLoginUserById(userId);
+        model.addAttribute("nickname",loginUser.getNickname());
         return "greetings";
-
     }
 
     @GetMapping("/join")
@@ -64,17 +57,18 @@ public class SessionLoginController {
     public String login(@ModelAttribute LoginRequest loginRequest,
                         HttpServletRequest httpServletRequest,
                         RedirectAttributes rttr){
-        User user = userService.login(loginRequest);
-
-        httpServletRequest.getSession().invalidate();
-        HttpSession session = httpServletRequest.getSession(true);
         try{
+            User user = userService.login(loginRequest);
+            httpServletRequest.getSession().invalidate();
+            HttpSession session = httpServletRequest.getSession(true);
             session.setAttribute("userId",user.getId());
+            session.setMaxInactiveInterval(1800); //30분
+            return "redirect:/session-login";
 
         }catch (NullPointerException e){
+            rttr.addFlashAttribute("msg", "없는 회원입니다!");
+            return "redirect:/session-login/login";
         }
-        session.setMaxInactiveInterval(1800); //30분
-        return "redirect:/session-login";
     }
 
     @GetMapping("/info")
@@ -100,10 +94,10 @@ public class SessionLoginController {
     }
 
     @GetMapping("/admin")
-    public String adminPage(@SessionAttribute(name="userid",required = false)Long userid){
+    public String adminPage(@SessionAttribute(name="userId",required = false)Long userid){
         User loginUser = userService.getLoginUserById(userid);
         if(loginUser == null){
-            return "redirect:/session:login/login";
+            return "redirect:/session-login/login";
         }
         if(!loginUser.getRole().equals(UserRole.ADMIN)){
             System.out.println("사용자");
