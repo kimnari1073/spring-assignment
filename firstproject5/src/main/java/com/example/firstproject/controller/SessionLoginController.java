@@ -22,6 +22,7 @@ public class SessionLoginController {
     private UserService userService;
 
 
+
 //    @GetMapping(value = {"","/"})
 //    public String home(Model model,
 //                       @SessionAttribute(name="userId", required = false)
@@ -106,6 +107,6 @@ public class SessionLoginController {
             System.out.println("사용자");
             return "redirect:/";
         }
-        return "sessionLogin/admin";
+        return "redirect:/members";
     }
 }

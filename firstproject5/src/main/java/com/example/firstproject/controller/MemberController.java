@@ -3,7 +3,9 @@ package com.example.firstproject.controller;
 
 import com.example.firstproject.dto.MemberForm;
 import com.example.firstproject.entity.Member;
+import com.example.firstproject.entity.User;
 import com.example.firstproject.repository.MemberRepository;
+import com.example.firstproject.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,8 @@ public class MemberController {
 
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private UserRepository userRepository;
 
 //    //폼
 //    @GetMapping("/member/create")
@@ -38,7 +42,7 @@ public class MemberController {
     //회원목록
     @GetMapping("/members")
     public String indexMembers(Model model){
-        model.addAttribute("member",(List<Member>)memberRepository.findAll());
+        model.addAttribute("member",(List<User>)userRepository.findAll());
         return "members/index";
     }
 
