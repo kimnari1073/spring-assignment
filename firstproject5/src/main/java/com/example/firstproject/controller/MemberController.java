@@ -1,10 +1,7 @@
 package com.example.firstproject.controller;
 
 
-import com.example.firstproject.dto.MemberForm;
-import com.example.firstproject.entity.Member;
 import com.example.firstproject.entity.User;
-import com.example.firstproject.repository.MemberRepository;
 import com.example.firstproject.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,23 +18,8 @@ import java.util.List;
 public class MemberController {
 
     @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
     private UserRepository userRepository;
 
-//    //폼
-//    @GetMapping("/member/create")
-//    public String singUpForm(){
-//        return "members/signUp";
-//    }
-
-    //회원가입
-    @PostMapping("/member/create")
-    public String createMember(MemberForm memberForm){
-        log.info(memberForm.toString());
-        memberRepository.save(memberForm.toEntity());
-        return "redirect:/members";
-    }
 
     //회원목록
     @GetMapping("/members")
@@ -49,34 +31,34 @@ public class MemberController {
     //회원 상세
     @GetMapping("/member/{id}")
     public String showMember(@PathVariable() Long id, Model model){
-        Member member = memberRepository.findById(id).orElse(null);
-        model.addAttribute("member",member);
+        User user = userRepository.findById(id).orElse(null);
+        model.addAttribute("member",user);
         return "members/show";
     }
 
     //회원 수정 폼
-    @GetMapping("member/{id}/edit")
+    @GetMapping("/member/{id}/edit")
     public String editMember(@PathVariable Long id, Model model){
-        model.addAttribute("member",memberRepository.findById(id).orElse(null));
+        model.addAttribute("member",userRepository.findById(id).orElse(null));
         return "members/edit";
     }
 
-    //회원 수정
+//    회원 수정
     @PostMapping("/member/update")
-    public String updateMember(MemberForm memberForm){
-        Member memberEntity = memberForm.toEntity();
-        Member target = memberRepository.findById(memberEntity.getId()).orElse(null);
+    public String updateMember(User userForm){
+        User target = userRepository.findById(userForm.getId()).orElse(null);
         if(target != null){
-            memberRepository.save(memberEntity);
+            userRepository.save(userForm);
         }
-        return "redirect:/member/"+memberEntity.getId();
+        return "redirect:/member/"+userForm.getId();
     }
 
-    @GetMapping("member/{id}/delete")
+    //회원삭제
+    @GetMapping("/member/{id}/delete")
     public String deleteMember(@PathVariable Long id, RedirectAttributes rttr){
-        Member target = memberRepository.findById(id).orElse(null);
+        User target = userRepository.findById(id).orElse(null);
         if(target !=null){
-            memberRepository.delete(target);
+            userRepository.delete(target);
             rttr.addFlashAttribute("msg","회원 삭제 되었습니다.");
         }
         return "redirect:/members";

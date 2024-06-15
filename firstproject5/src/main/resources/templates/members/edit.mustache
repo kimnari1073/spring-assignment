@@ -4,12 +4,12 @@
     <form class="container" action="/member/update" method="post">
         <input name="id" type="hidden" value="{{id}}"> id: {{id}}
         <div class="mb-3">
-            <label class="form-label">회원 이름: {{name}}</label>
-            <input type="text" class="form-control" name="name" value="{{name}}">
+            <label class="form-label">회원 아이디: {{loginId}}</label>
+            <input type="text" class="form-control" name="loginId" value="{{loginId}}">
         </div>
         <div class="mb-3">
-            <label class="form-label">회원 이메일: {{email}}</label>
-            <input type="text" class="form-control" name="email" value="{{email}}">
+            <label class="form-label">회원 닉네임: {{nickname}}</label>
+            <input type="text" class="form-control" name="nickname" value="{{nickname}}">
         </div>
         <div class="mb-3">
             <label class="form-label">회원 비밀번호: {{password}}</label>

@@ -4,16 +4,16 @@
     <thead>
     <tr>
         <th scope="col">Id</th>
-        <th scope="col">Title</th>
-        <th scope="col">Content</th>
+        <th scope="col">User Id</th>
+        <th scope="col">nickname</th>
     </tr>
     </thead>
     <tbody>
     {{#member}}
         <tr>
             <th>{{id}}</th>
+            <td>{{loginId}}</td>
             <td><a href="/member/{{id}}">{{nickname}}</a></td>
-            <td>{{id}}</td>
         </tr>
     {{/member}}
     </tbody>

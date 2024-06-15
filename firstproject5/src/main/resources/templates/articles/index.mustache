@@ -1,24 +1,35 @@
 {{>layouts/header}}
 
-<button></button><a class="dropdown-item" href="/articles/new">게시판 쓰기</a></button>
-<table class="table">
+<button type="button" onclick="window.location.href='/articles/new'">새 글작성</button>
+
+<h4>공지사항</h4>
+<table class="table table-hover">
     <thead>
     <tr>
-        <th scope="col">Id</th>
+        <th scope="col">#</th>
         <th scope="col">Title</th>
-        <th scope="col">Content</th>
+        <th scope="col">작성일</th>
     </tr>
     </thead>
-    <tbody>
+    <tbody class="table-group-divider">
     {{#articleList}}
-        <tr>
-            <th>{{id}}</th>
-            <td><a href="/articles/{{id}}">{{title}}</a></td>
+        <tr data-href="/articles/{{id}}">
+            <th scope="row">{{id}}</th>
+            <td>{{title}}</td>
             <td>{{content}}</td>
         </tr>
     {{/articleList}}
     </tbody>
 </table>
-
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var rows = document.querySelectorAll('tr[data-href]');
+        rows.forEach(function(row) {
+            row.addEventListener('click', function() {
+                window.location.href = row.getAttribute('data-href');
+            });
+        });
+    });
+</script>
 
 {{>layouts/footer}}
