@@ -4,17 +4,18 @@ import com.example.firstproject.dto.ArticleForm;
 import com.example.firstproject.dto.CommentDto;
 import com.example.firstproject.entity.Article;
 import com.example.firstproject.entity.Comment;
+import com.example.firstproject.entity.UserRole;
 import com.example.firstproject.repository.ArticleRepository;
 import com.example.firstproject.repository.CommentRepository;
+import com.example.firstproject.service.ArticleService;
 import com.example.firstproject.service.CommentService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -24,77 +25,112 @@ import java.util.List;
 public class ArticleController {
 
     @Autowired
-    private ArticleRepository articleRepository;
-
+    private ArticleService articleService;
     @Autowired
     private CommentService commentService;
 
+    //공지사항 작성
     @GetMapping("/articles/new")
-    public String newArticleForm() {
+    public String newArticleForm(HttpServletRequest httpServletRequest,
+                                 RedirectAttributes rttr) {
+        HttpSession session = httpServletRequest.getSession(false);
+        if (session == null || session.getAttribute("userId") == null) {
+            return "sessionLogin/login";
+        }
+        UserRole role = (UserRole)session.getAttribute("role");
 
-        return "articles/new";
+        if ("ADMIN".equals(role.toString())) {
+            // 관리자 권한 처리
+            return "articles/new";
+        } else {
+            // 사용자 권한 처리
+            rttr.addFlashAttribute("msg", "권한이 없습니다.");
+            return "redirect:/articles";
+        }
     }
 
     @PostMapping("/articles/create")
     public String createArticle(ArticleForm form) {  //DTO ArticleForm
-//        log.info(form.toString());
-        // 1. DTO를 엔티티로 변환
-        Article article = form.toEntity();
-//        log.info(article.toString());
-
-        Article saved = articleRepository.save(article);
-//        log.info(saved.toString());
-
+        Article saved = articleService.create(form);
         return "redirect:/articles/"+saved.getId();
 
     }
     //목록
     @GetMapping("/articles")
     public String index(Model model) {
-        List<Article> articleEntityList = (List<Article>) articleRepository.findAll();
+        List<Article> articleEntityList = articleService.index();
         model.addAttribute("articleList", articleEntityList);
         return "articles/index";
     }
 
-    @GetMapping("/articles/{id}/edit")
-    public String edit(@PathVariable Long id, Model model) {
-        Article articleEntity = articleRepository.findById(id).orElse(null);
-        model.addAttribute("article", articleEntity);
-        return "articles/edit";
+    //수정페이지
+    @GetMapping("/articles/edit-page")
+    public String getEditPage(ArticleForm form,
+                              Model model,
+                              HttpServletRequest httpServletRequest,
+                              RedirectAttributes rttr) {
+        HttpSession session = httpServletRequest.getSession(false);
+        if (session == null || session.getAttribute("userId") == null) {
+            return "sessionLogin/login";
+        }
+        UserRole role = (UserRole)session.getAttribute("role");
+
+        if ("ADMIN".equals(role.toString())) {
+            // 관리자 권한 처리
+            model.addAttribute("article",form);
+            return "articles/edit";
+        } else {
+            // 사용자 권한 처리
+            rttr.addFlashAttribute("msg", "권한이 없습니다.");
+            return "redirect:/articles";
+        }
+
+
+
     }
+
+    //게시글 수정
     @PostMapping("/articles/update")
     public String update(@RequestParam Long id, ArticleForm form) { //Long id는 없어도 된다. -> form에 id필드가 있기 때문에
-        Article articleEntity = form.toEntity();
-        Article target = articleRepository.findById(articleEntity.getId()).orElse(null);
-        if (target != null) {
-            articleRepository.save(articleEntity);
-        }
-        return "redirect:/articles/" + articleEntity.getId();
+        Article result = articleService.update(id, form);
+        return "redirect:/articles/" + result.getId();
     }
 
 
-    @GetMapping("/testForward")
-    public String forwardTestMethod() {
-         log.info("Forward test 메소드 호출");
-          return "forward:/bye";
-    }
-
+    //게시글 상세페이지
     @GetMapping("/articles/{id}")
     public String show(@PathVariable("id") Long id, Model model) {
-        Article articleEntity = articleRepository.findById(id).orElse(null);
+        Article articleResult = articleService.show(id);
         List<CommentDto>commentsDtos = commentService.comments(id);
-        model.addAttribute("article", articleEntity);
+        model.addAttribute("article", articleResult);
         model.addAttribute("commentDtos",commentsDtos);
         return "articles/show";
     }
 
+
+    //게시글 삭제
     @GetMapping("/articles/{id}/delete")
-    public String delete(@PathVariable Long id, RedirectAttributes rttr) {
-        Article target = articleRepository.findById(id).orElse(null);
-        if (target != null) {
-            articleRepository.delete(target);
-            rttr.addFlashAttribute("msg", "삭제됐습니다!");
+    public String delete(@PathVariable Long id,
+                         RedirectAttributes rttr,
+                         HttpServletRequest httpServletRequest) {
+
+        HttpSession session = httpServletRequest.getSession(false);
+        if (session == null || session.getAttribute("userId") == null) {
+            return "sessionLogin/login";
         }
-        return "redirect:/articles";
+        UserRole role = (UserRole)session.getAttribute("role");
+
+        if ("ADMIN".equals(role.toString())) {
+            // 관리자 권한 처리
+            Article articleResult = articleService.delete(id);
+            if (articleResult != null) {
+                rttr.addFlashAttribute("msg", "삭제됐습니다!");
+            }
+            return "redirect:/articles";
+        } else {
+            // 사용자 권한 처리
+            rttr.addFlashAttribute("msg", "권한이 없습니다.");
+            return "redirect:/articles";
+        }
     }
 }

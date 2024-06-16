@@ -15,6 +15,7 @@ public class ArticleService {
 
     @Autowired
     private ArticleRepository articleRepository;
+
     public List<Article> index(){
         return (List<Article>) articleRepository.findAll();
     }
@@ -51,27 +52,27 @@ public class ArticleService {
         return target;
     }
 
-    @Transactional
-    public List<Article> createArticles(List<ArticleForm> dtos){
-        List<Article> articleList = new ArrayList<>();
-
-//        for (int i = 0; i <dtos.size() ; i++) {
-//            ArticleForm dto = dtos.get(i);
-//            Article entity = dto.toEntity();
-//            articleList.add(entity);
+//    @Transactional
+//    public List<Article> createArticles(List<ArticleForm> dtos){
+//        List<Article> articleList = new ArrayList<>();
+//
+////        for (int i = 0; i <dtos.size() ; i++) {
+////            ArticleForm dto = dtos.get(i);
+////            Article entity = dto.toEntity();
+////            articleList.add(entity);
+////        }
+////        for (int i = 0; i < articleList.size(); i++) {
+////            Article article = articleList.get(i);
+////            articleRepository.save(article);
+////        }
+//        dtos.forEach(dto -> articleList.add(dto.toEntity()));
+//        articleRepository.saveAll(articleList);
+//
+//        try{
+//            articleRepository.findById(-1L).orElseThrow();
+//        }catch (Exception e){
+//            throw new IllegalArgumentException("결제 실패!");
 //        }
-//        for (int i = 0; i < articleList.size(); i++) {
-//            Article article = articleList.get(i);
-//            articleRepository.save(article);
-//        }
-        dtos.forEach(dto -> articleList.add(dto.toEntity()));
-        articleRepository.saveAll(articleList);
-
-        try{
-            articleRepository.findById(-1L).orElseThrow();
-        }catch (Exception e){
-            throw new IllegalArgumentException("결제 실패!");
-        }
-        return articleList;
-    }
+//        return articleList;
+//    }
 }

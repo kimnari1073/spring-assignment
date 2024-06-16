@@ -16,7 +16,7 @@
         <tr data-href="/articles/{{id}}">
             <th scope="row">{{id}}</th>
             <td>{{title}}</td>
-            <td>{{content}}</td>
+            <td class="createdAt">{{createdAt}}</td>
         </tr>
     {{/articleList}}
     </tbody>
@@ -28,6 +28,26 @@
             row.addEventListener('click', function() {
                 window.location.href = row.getAttribute('data-href');
             });
+        });
+        // 모든 createdAt 요소를 선택
+        var createdAtElements = document.querySelectorAll(".createdAt");
+
+        // 각 요소를 반복 처리
+        createdAtElements.forEach(function(element) {
+            var createdAtText = element.textContent;
+            var formattedDate = createdAtText.split('T')[0]; // T를 기준으로 잘라서 앞부분만 사용
+            element.textContent = formattedDate;
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function() {
+        // 모든 createdAt 요소를 선택
+        var createdAtElements = document.querySelectorAll(".createdAt");
+
+        // 각 요소를 반복 처리
+        createdAtElements.forEach(function(element) {
+            var createdAtText = element.textContent;
+            var formattedDate = createdAtText.split('T')[0]; // T를 기준으로 잘라서 앞부분만 사용
+            element.textContent = formattedDate;
         });
     });
 </script>

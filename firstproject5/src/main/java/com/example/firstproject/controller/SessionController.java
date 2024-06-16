@@ -9,29 +9,15 @@ import com.example.firstproject.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/session-login")
-public class SessionLoginController {
+public class SessionController {
     @Autowired
     private UserService userService;
-
-
-
-//    @GetMapping(value = {"","/"})
-//    public String home(Model model,
-//                       @SessionAttribute(name="userId", required = false)
-//                       Long userId){
-//        User loginUser = userService.getLoginUserById(userId);
-//
-////        model.addAttribute("nickname",loginUser.getNickname());
-//        return "greetings";
-//    }
 
     @GetMapping("/join")
     public String joinPage(Model model){
@@ -65,13 +51,13 @@ public class SessionLoginController {
             HttpSession session = httpServletRequest.getSession(true);
             session.setAttribute("userId",user.getId());
             session.setAttribute("nickname",user.getLoginId());
-
+            session.setAttribute("role",user.getRole());
             session.setMaxInactiveInterval(1800); //30분
             return "redirect:/";
 
         }catch (NullPointerException e){
             rttr.addFlashAttribute("msg", "없는 회원입니다!");
-            return "redirect:/session-login/login";
+            return "redirect:/login";
         }
     }
 
@@ -81,7 +67,7 @@ public class SessionLoginController {
                            Model model){
         User loginUser = userService.getLoginUserById(userid);
         if(loginUser==null){
-            return "redirect:/session-login/login";
+            return "redirect:/login";
         }
         model.addAttribute("user",loginUser);
         return "sessionLogin/info";
@@ -101,7 +87,7 @@ public class SessionLoginController {
     public String adminPage(@SessionAttribute(name="userId",required = false)Long userid){
         User loginUser = userService.getLoginUserById(userid);
         if(loginUser == null){
-            return "redirect:/session-login/login";
+            return "redirect:/login";
         }
         if(!loginUser.getRole().equals(UserRole.ADMIN)){
             System.out.println("사용자");
