@@ -52,6 +52,10 @@ public class SessionController {
             session.setAttribute("userId",user.getId());
             session.setAttribute("nickname",user.getLoginId());
             session.setAttribute("role",user.getRole());
+            if(user.getRole().toString().equals("ADMIN")){
+                session.setAttribute("isAdmin",true);
+
+            }
             session.setMaxInactiveInterval(1800); //30분
             return "redirect:/";
 

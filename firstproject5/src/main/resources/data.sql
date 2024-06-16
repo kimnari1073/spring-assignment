@@ -2,6 +2,10 @@ INSERT INTO article (title, content, created_at) VALUES ('가가가가', '1111',
 INSERT INTO article (title, content, created_at) VALUES ('나나나나', '2222', NOW());
 INSERT INTO article (title, content, created_at) VALUES ('다다다다', '3333', NOW());
 
+--dd
+insert into blog(title,content,created_at)values ('블로그1','안녕하세요1',NOW());
+insert into blog(title,content,created_at)values ('블로그2','안녕하세요2',NOW());
+insert into blog(title,content,created_at)values ('블로그3','안녕하세요3',NOW());
 -- article 테이블에 데이터 추가
 INSERT INTO article(title, content,created_at) VALUES('당신의 인생 영화는?', '댓글 고',NOW());
 INSERT INTO article(title, content,created_at) VALUES('당신의 소울 푸드는?', '댓글 고고',NOW());

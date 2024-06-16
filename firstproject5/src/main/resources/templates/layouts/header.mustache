@@ -37,9 +37,11 @@
                     </li>
                 {{/nickname}}
                 {{#nickname}}
+                    {{#isAdmin}}
                     <li class="nav-item">
                         <a class="nav-link" href="/members">회원관리</a>
                     </li>
+                    {{/isAdmin}}
                     <li class="nav-item">
                         <a class="nav-link" href="/info">내정보</a>
                     </li>

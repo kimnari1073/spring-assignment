@@ -26,8 +26,8 @@ public class ArticleController {
 
     @Autowired
     private ArticleService articleService;
-    @Autowired
-    private CommentService commentService;
+//    @Autowired
+//    private CommentService commentService;
 
     //공지사항 작성
     @GetMapping("/articles/new")
@@ -58,8 +58,8 @@ public class ArticleController {
     //목록
     @GetMapping("/articles")
     public String index(Model model) {
-        List<Article> articleEntityList = articleService.index();
-        model.addAttribute("articleList", articleEntityList);
+        List<Article> articleList = articleService.index();
+        model.addAttribute("articleList", articleList);
         return "articles/index";
     }
 
@@ -101,9 +101,9 @@ public class ArticleController {
     @GetMapping("/articles/{id}")
     public String show(@PathVariable("id") Long id, Model model) {
         Article articleResult = articleService.show(id);
-        List<CommentDto>commentsDtos = commentService.comments(id);
+//        List<CommentDto>commentsDtos = commentService.comments(id);
         model.addAttribute("article", articleResult);
-        model.addAttribute("commentDtos",commentsDtos);
+//        model.addAttribute("commentDtos",commentsDtos);
         return "articles/show";
     }
 
@@ -133,4 +133,6 @@ public class ArticleController {
             return "redirect:/articles";
         }
     }
+
+
 }

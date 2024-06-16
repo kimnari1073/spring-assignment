@@ -4,6 +4,7 @@ import com.example.firstproject.dto.ArticleForm;
 import com.example.firstproject.entity.Article;
 import com.example.firstproject.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +52,9 @@ public class ArticleService {
         articleRepository.delete(target);
         return target;
     }
-
+    public List<Article> getLatestArticles() {
+        return articleRepository.findTop3ByOrderByCreatedAtDesc();
+    }
 //    @Transactional
 //    public List<Article> createArticles(List<ArticleForm> dtos){
 //        List<Article> articleList = new ArrayList<>();
